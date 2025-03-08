@@ -1,72 +1,50 @@
 ﻿using System;
 
 
-class Employee
+class BankAccount
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public double Salary { get; set; }
-    public string Department { get; set; }
+    public string AccountHolder { get; set; }
+    public double Balance { get; set; }
 
-    public Employee(int id, string name, double salary, string department)
+    public BankAccount(string accountHolder, double balance)
     {
-        Id = id;
-        Name = name;
-        Salary = salary;
-        Department = department;
+        AccountHolder = accountHolder;
+        Balance = balance;
     }
 
-    public virtual double CalculateBonus()
+    public virtual void CalculateInterest()
     {
-        return 0;
+       
     }
 
     public override string ToString()
     {
-        return $"ID: {Id}, Name: {Name}, Salary: {Salary:C}, Department: {Department}";
+        return $"Account Holder: {AccountHolder}, Balance: {Balance:C}";
     }
 }
 
 
-class Manager : Employee
+class SavingsAccount : BankAccount
 {
-    public int TeamSize { get; set; }
+    public SavingsAccount(string accountHolder, double balance)
+        : base(accountHolder, balance) { }
 
-    public Manager(int id, string name, double salary, string department, int teamSize)
-        : base(id, name, salary, department)
+    public override void CalculateInterest()
     {
-        TeamSize = teamSize;
-    }
-
-    public override double CalculateBonus()
-    {
-        return Salary * 0.20;
-    }
-
-    public override string ToString()
-    {
-        return base.ToString() + $", Team Size: {TeamSize}, Bonus: {CalculateBonus():C}";
+        double interest = Balance * 0.05;
+        Console.WriteLine($"Interest for {AccountHolder}: {interest:C}");
     }
 }
 
-class Developer : Employee
+
+class CheckingAccount : BankAccount
 {
-    public string About { get; set; }
+    public CheckingAccount(string accountHolder, double balance)
+        : base(accountHolder, balance) { }
 
-    public Developer(int id, string name, double salary, string department, string about)
-        : base(id, name, salary, department)
+    public override void CalculateInterest()
     {
-        About = about;
-    }
-
-    public override double CalculateBonus()
-    {
-        return Salary * 0.10;
-    }
-
-    public override string ToString()
-    {
-        return base.ToString() + $", About: {About}, Bonus: {CalculateBonus():C}";
+        Console.WriteLine("Checking accounts do not earn interest.");
     }
 }
 
@@ -74,10 +52,44 @@ class Program
 {
     static void Main()
     {
-        Manager manager = new Manager(1, "Ahmet Yılmaz", 8000, "IT", 5);
-        Developer developer = new Developer(2, "Zeynep Kaya", 6000, "Software", "Backend Developer");
+        BankAccount savings = new SavingsAccount("Ali Veli", 10000);
+        BankAccount checking = new CheckingAccount("Ayşe Yılmaz", 5000);
 
-        Console.WriteLine(manager);
-        Console.WriteLine(developer);
+        Console.WriteLine(savings);
+        savings.CalculateInterest();
+
+        Console.WriteLine(checking);
+        checking.CalculateInterest();
     }
+}
+
+//soru 3-4-5
+//Abstract Class Nedir?
+//Soyut sınıflar, ortak özellikleri ve metotları içeren ancak eksik (tamamlanmamış) metotlar da barındırabilen sınıflardır.
+//İçerisinde abstract metotlar tanımlanabilir ve bu metotlar alt sınıflarda override edilmelidir.
+//Soyut sınıflardan doğrudan nesne oluşturulamaz, ancak miras alınarak kullanılabilir.
+
+//Interface Nedir?
+//Interface, sadece metot ve özellik imzalarını içeren bir yapıdır ve içlerinde gövde (implementation) bulunmaz.
+//Interface’i implemente eden (uygulayan) sınıflar, içindeki metotları zorunlu olarak tanımlamalıdır.
+//Çoklu kalıtıma olanak tanır ve farklı sınıfların ortak davranışlarını belirlemek için kullanılır.
+
+abstract class Animal
+{
+    public abstract void MakeSound();
+}
+
+class Dog : Animal
+{
+    public override void MakeSound() => Console.WriteLine("Woof!");
+}
+
+interface IVehicle
+{
+    void Drive();
+}
+
+class Car : IVehicle
+{
+    public void Drive() => Console.WriteLine("Car is driving...");
 }
